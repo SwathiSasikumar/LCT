@@ -132,10 +132,10 @@ void JetBranches::fill(const EVENT::LCCollection* col, EVENT::LCEvent* evt )
   
    // Initilize local variables/arrays to zero
    _nj = 0;
-  _d1 = 0;
-  _d2 = 0;
-  _y1 = 0;
-  _y2 = 0;
+   _d1 = 0;
+   _d2 = 0;
+   _y1 = 0;
+   _y2 = 0;
    
    _jevis  = 0;
    _jPxvis = 0;
@@ -157,6 +157,7 @@ void JetBranches::fill(const EVENT::LCCollection* col, EVENT::LCEvent* evt )
   
    for ( size_t i = 0; i < LCT_JET_MAX ; ++i ) {
 	  _jori[ i ] = 0;
+	 
 	  _jmox[ i ] = 0;
 	  _jmoy[ i ] = 0;
 	  _jmoz[ i ] = 0;
@@ -184,6 +185,8 @@ void JetBranches::fill(const EVENT::LCCollection* col, EVENT::LCEvent* evt )
    }
 
    if( !col ) return ;
+   
+   
 
    if( col->getTypeName() != lcio::LCIO::RECONSTRUCTEDPARTICLE ){
 
@@ -191,16 +194,29 @@ void JetBranches::fill(const EVENT::LCCollection* col, EVENT::LCEvent* evt )
 
 	  throw EVENT::Exception( exStr + col->getTypeName() ) ;
    } // end if
+   
+   // create a helper map w/ pointers to the original collections used in MergeCollections
+   // to access the corresponding collection parameters
+   std::map< int, lcio::LCCollection* > cMap ;
+
+   lcio::StringVec colNames;
+   col->getParameters().getStringVals("MergedCollection_Names",colNames) ;
+   lcio::IntVec colIDs ;
+   col->getParameters().getIntVals("MergedCollection_inColIDs",colIDs) ;
+
+   for(unsigned i=0 ; i < colNames.size() ; ++i){
+     auto colOri = evt->getCollection( colNames[i] ) ;
+     if( colOri )
+       cMap[ colIDs[i] ] = colOri ;
+       streamlog_out(DEBUG4) << "colOri "<<colOri<<'\n';
+   }
 
    if (_writeparameters) CollectionBranches::fill(col, evt);
 
    // Get number of jets
    _nj  = col->getNumberOfElements() ;
   
-   _d1 =col->getParameters().getFloatVal("d_{n,n+1}");
-   _d2 =col->getParameters().getFloatVal("d_{n-1,n}");
-   _y1 =col->getParameters().getFloatVal("y_{n,n+1}");
-   _y2 =col->getParameters().getFloatVal("y_{n-1,n}");
+  
    
   // streamlog_out(ERROR) << "d1 "<<_d1<<'\n';
    
@@ -250,6 +266,12 @@ void JetBranches::fill(const EVENT::LCCollection* col, EVENT::LCEvent* evt )
 
 
 		_jori[i] = jet->ext<CollID>();
+		
+		auto colOri = cMap[_jori[i]];
+		_d1 =colOri->getParameters().getFloatVal("d_{n,n+1}");
+        _d2 =colOri->getParameters().getFloatVal("d_{n-1,n}");
+        _y1 =colOri->getParameters().getFloatVal("y_{n,n+1}");
+        _y2 =colOri->getParameters().getFloatVal("y_{n-1,n}");
 	  // Write default jet parameters
 	  _jmox[ i ] = jet->getMomentum()[0];
 	  _jmoy[ i ] = jet->getMomentum()[1];

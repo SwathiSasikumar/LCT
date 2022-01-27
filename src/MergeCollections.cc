@@ -225,4 +225,3 @@ void MergeCollections::end(){
   streamlog_out( MESSAGE ) << " processed " << _nEvt << " events in " << _nRun << " runs "
                            << std::endl ;
 }
-
