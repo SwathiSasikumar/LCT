@@ -56,10 +56,10 @@ void JetBranches::initBranches( TTree* tree, const std::string& pre){
 
    tree->Branch( (pre+"nj").c_str() , &_nj ,  (pre+"njet/I").c_str() ) ;
     tree->Branch( (pre+"jori").c_str() , _jori , (pre+"jori["+pre+"njet]/I").c_str() ) ;
-    tree->Branch( (pre+"d1").c_str() , &_d1 ,  (pre+"d1/F").c_str() ) ;
-    tree->Branch( (pre+"d2").c_str() , &_d2 ,  (pre+"d2/F").c_str() ) ;
-    tree->Branch( (pre+"y1").c_str() , &_y1 ,  (pre+"y1/F").c_str() ) ;
-    tree->Branch( (pre+"y2").c_str() , &_y2 ,  (pre+"y2/F").c_str() ) ;
+    tree->Branch( (pre+"d1").c_str() , &_d1 ,  (pre+"d1["+pre+"njet]/F").c_str() ) ;
+    tree->Branch( (pre+"d2").c_str() , &_d2 ,  (pre+"d2["+pre+"njet]/F").c_str() ) ;
+    tree->Branch( (pre+"y1").c_str() , &_y1 ,  (pre+"y1["+pre+"njet]/F").c_str() ) ;
+    tree->Branch( (pre+"y2").c_str() , &_y2 ,  (pre+"y2["+pre+"njet]/F").c_str() ) ;
 
    // ------------ Default Jet parameters ------------------//
    tree->Branch( (pre+"jmox").c_str() , _jmox , (pre+"jmox["+pre+"njet]/F").c_str() ) ;

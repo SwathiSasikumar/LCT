@@ -127,10 +127,10 @@ class JetBranches : public CollectionBranches
       int _jnpid   {};                            /* ? */
 
 	  // Used for extra parameters
-	  float _d1 {};
-      float _d2 {};
-      float _y1 {};
-      float _y2 {};
+	  float _d1[ LCT_JET_MAX ] {};
+      float _d2[ LCT_JET_MAX ] {};
+      float _y1[ LCT_JET_MAX ] {};
+      float _y2[ LCT_JET_MAX ] {};
 	  float  _jevis {};			                /* Jet Visible Energy */
 	  float  _jPxvis{};                           /* Jet Momentum (x-component) */
 	  float  _jPyvis{};                           /* Jet Momentum (y-component) */
